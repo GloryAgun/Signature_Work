@@ -1,0 +1,241 @@
+---
+title: "boolean_network"
+format: html
+editor: visual
+---
+
+```{r}
+library(BoolNet)
+```
+
+```{r}
+install.packages("writexl")
+```
+
+```{r}
+library(writexl)
+```
+
+```{r}
+tt <- getTransitionTable(attr)
+```
+
+```{r}
+motility <- loadNetwork("gba.txt")
+```
+
+```{r}
+path <- getPathToAttractor(motility, rep(0,16))
+```
+
+```{r}
+plotSequence(sequence=path)
+```
+
+```{r}
+attr <- getAttractors(motility)
+attr
+```
+
+```{r}
+
+sim <- markovSimulation(motility)
+sim
+```
+
+```{r}
+attr <- getAttractors(motility,
+type="asynchronous", method="random", startStates=500)
+attr
+```
+
+```{r}
+print(attr, activeOnly=TRUE)
+```
+
+```{r}
+sequenceToLaTeX(sequence=, file="sequence5htr.tex")
+```
+
+```{r}
+saveNetwork(motility, file="motil.txt")
+```
+
+```{r}
+startState <- generateState(motility, specs=c("TRP"=1,"TPH1"=1, "TPH2"=1))
+stateTransition(motility,startState)
+```
+
+```{r}
+startState3 <- generateState(motility, specs=c("TRP"=1,"HTR"=1,"TPH1"=1, "TPH2"=1, "SSRI"= 1))
+stateTransition(motility,startState3)
+```
+
+```{r}
+startState4 <- generateState(motility, specs=c("TRP"=1,"HTR"=1,"TPH1"=1, "TPH2"=1, "GRAM"= 1, "SSRI"=1))
+stateTransition(motility,startState4)
+```
+
+```{r}
+path<-getPathToAttractor(network=motility,state=startState)
+```
+
+plotSequence(sequence=path, includeAttractorStates = "all")
+
+```{r}
+plotSequence(sequence=path, includeAttractorStates = "all")
+```
+
+```{r}
+startState2 <- generateState(motility, specs=c("TRP"=1,"HTR"=1,"TPH1"=1, "TPH2"=1, "SSRI"=1))
+stateTransition(motility,startState2)
+```
+
+```{r}
+startState <- generateState(motility, specs=c("TRP"=1,"HTR1"=1, "HTR2"=1, "HTR3"=1, "HTR3"=1, "TPH1"=1, "TPH2"=1))
+stateTransition(motility,startState)
+```
+
+```{r}
+simulateSymbolicModel(motility,
+method = c("random"),
+returnSequences =
+(!(match.arg(method) %in%
+c("sat.exhaustive"))),
+returnGraph =
+(!(match.arg(method) %in%
+c("sat.exhaustive", ))),
+returnAttractors = TRUE,
+maxTransitions = Inf,
+maxAttractorLength = Inf,
+canonical = TRUE)
+```
+
+```{r}
+combined <- fixGenes(motility, c("TRP","HTP5", "TPH2", "TPH1", "HT5", "AADC", "DDC", "T5H", "KYN", "IDO", "IFN", "SERT", "SSRI", "E5HT", "VMAT", "C5HT", "HTR1", "HTR2", "HTR3", "HTR4", "PLC", "DAG", "IP3", "PKC", "NA", "AC5", "CAMP", "GABA", "TLR2", "GRAM","MyD88", "IRAK", "TRAF6", "p38", "MAOA", "SNAT", "HIA5", "HIAA", "NAS", "CA2", "MOTILITY"), c(1))
+```
+
+```{r}
+baseline <- fixGenes(motility, c("SSRI", "GRAM"), c(1,1))
+```
+
+```{r}
+antidepressant <- fixGenes(motility, c("SSRI", "GRAM","TRP","HTP5", "TPH2", "TPH1", "HT5", "AADC", "DDC", "T5H", "KYN", "IDO", "IFN", "SERT", "E5HT", "VMAT", "C5HT", "HTR1", "HTR2", "HTR3", "HTR4", "PLC", "DAG", "IP3", "PKC", "NA", "AC5", "CAMP", "GABA", "TLR2", "MyD88", "IRAK", "TRAF6", "p38", "MAOA", "SNAT", "HIA5", "HIAA", "NAS", "CA2", "MOTILITY"), c(1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1))
+```
+
+```{r}
+grampositive <- fixGenes(motility, c("SSRI", "GRAM","TRP","HTP5", "TPH2", "TPH1", "HT5", "AADC", "DDC", "T5H", "KYN", "IDO", "IFN", "SERT", "E5HT", "VMAT", "C5HT", "HTR1", "HTR2", "HTR3", "HTR4", "PLC", "DAG", "IP3", "PKC", "NA", "AC5", "CAMP", "GABA", "TLR2", "MyD88", "IRAK", "TRAF6", "p38", "MAOA", "SNAT", "HIA5", "HIAA", "NAS", "CA2", "MOTILITY"), c(1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1))
+```
+
+```{r}
+plotNetworkWiring(motility)
+```
+
+```{r}
+series <- generateTimeSeries(motility, numSeries= 100, numMeasurements= 10,
+ noiseLevel= 0.1)
+```
+
+```{r}
+binSeries <- binarizeTimeSeries(series, method="kmeans")
+net <- reconstructNetwork(binSeries$binarizedMeasurements, method="bestfit")
+net
+```
+
+```{r}
+series <- generateTimeSeries(motility, numSeries=15, numMeasurements=10, perturbations=1, noiseLevel=0.1)
+```
+
+```{r}
+series$perturbations
+```
+
+```{r}
+perturbations <- series$perturbations
+series$perturbations <- NULL
+binSeries <- binarizeTimeSeries(series, method="kmeans")
+```
+
+```{r}
+net <- reconstructNetwork(binSeries$binarizedMeasurements,
+ method="bestfit",
+ perturbations=perturbations)
+ net
+```
+
+```{r}
+data(motility)
+stateTransition(motility, rep(1,42))
+```
+
+```{r}
+path <- getPathToAttractor(motility, rep(1,16))
+path
+```
+
+```{r}
+plotSequence(sequence=path, includeAttractorStates = "all")
+```
+
+```{r}
+attr <- getAttractors(motility)
+attr
+```
+
+```{r}
+attr <- getAttractors(motility)
+attr
+```
+
+```{r}
+plotStateGraph(attr)
+```
+
+```{r}
+attr <- getAttractors(motility, method="chosen", startStates=list(rep(0,16),rep(1,16)))
+```
+
+```{r}
+plotAttractors(attr, subset=2)
+```
+
+```{r}
+sim <- markovSimulation(motility)
+sim
+```
+
+```{r}
+sim <- markovSimulation(motility, numIterations=1024,
+ returnTable=FALSE)
+```
+
+```{r}
+sim
+```
+
+```{r}
+sim <- markovSimulation(motility,
+numIterations=1024,
+ returnTable=FALSE,
+startStates=list(rep(1,10)))
+sim
+```
+
+```{r}
+r <- perturbTrajectories(baseline,
+ measure="hamming",
+ numSamples=100,
+ flipBits=1)
+```
+
+```{r}
+r
+```
+
+```{r}
+testNetworkProperties(motility,
+numRandomNets=100,
+testFunction="testTransitionRobustness",
+testFunctionParams=list(numSamples=100),
+alternative="less")
+```
